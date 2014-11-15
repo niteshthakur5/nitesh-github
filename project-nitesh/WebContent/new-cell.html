@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Cell through JSON</title>
+    <link href="css/cell.css" rel="stylesheet">
+    
+    <!-- Bootstrap -->
+    <link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="data/celldata.json" ></script>
+    
+  </head>
+<body>
+    
+       <!-- .............. default navigation bar ......................................... -->
+       <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+         <div class="container">
+           <div class="navbar-header">
+               <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myNavbar">
+                   <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>
+               </button>
+               <a class="navbar-brand" href="#">Autocreated Cells</a>
+           </div>
+           
+           <div class="collapse navbar-collapse" id="myNavbar">
+               <ul class="nav navbar-nav navbar-right nav-right">
+                   <li><a href="#">link1</a></li>
+                   <li><a href="#">link2</a></li>
+                   <li><a href="#">link3</a></li>
+                   
+               </ul>
+           </div>
+         </div>
+       </nav>
+    
+    <div class="container">
+        <div class="col-xs-12 col-md-3 col-sm-5 " id="column-1">
+        </div>
+        <div class="col-xs-12 col-md-3 col-sm-5 " id="column-2">
+        </div>
+        <div class="col-xs-12 col-md-3 col-sm-5 " id="column-3">
+        </div>
+        <div class="col-xs-12 col-md-3 col-sm-5 " id="column-4">
+        </div>
+         
+    </div>
+        <!-- .........................JSON Data .......................................... -->
+       <script>
+    
+ //           $.getJSON("http://localhost:8080/jsonTrial/celldata.json",function(cell1){                 //ajax rquest through getJSON()
+              $.ajax({ url:"http://localhost:8080/jsonTrial/celldata.json",
+            	      dataType:"json",
+            	      type:"get",
+            	      crossDomain:true,
+                       success:function(cell1){displayData(cell1);}
+              
+              }); 
+ 
+              function displayData(cell1){
+                  var result="";
+                  var index=0;
+                  for(var i=0;i<cell1.length;i++){
+                      for(var j=0;j<4;j++,index++){ 
+                        if(index<cell1.length){ 
+                            result+= "<div class=\"cell\">" +
+                                     "<div class=\"thumbnail\">" +
+                                           "<img src=\"ah/iStock_000035478734Large-kids-soccer.jpg\" alt=\"soccer image\">" +
+                                     "</div>" +
+                                     "<div class=\"caption\">" +
+                                                "<h3 class=\"lable-color\">"+cell1[index].imageName+"</h3>" +
+                                                "<p>"+cell1[index].imageDesc+"</p>"   +
+                                                "<a href=\"#\" class=\"link\">more...</a>"      +
+                                       "</div>" +
+                                     "</div>"; 
+                                     
+                          if(j==0){
+                              $("#column-1").append(result); result=""; 
+                          }else if(j==1){
+                              $("#column-2").append(result); result="";
+                           }else if(j==2){
+                              $("#column-3").append(result); result="";
+                            }else if(j==3){
+                              $("#column-4").append(result);  result="";
+                             }
+                                
+                        }
+                        else{
+                            break;
+                        }
+                           
+                      }
+                    
+                 }
+                  
+              
+                  
+           }
+ 
+                
+           
+           
+    </script>
+</body>
+</html>

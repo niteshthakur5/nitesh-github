@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Inheritance in js</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript">
+    /* function MyDate(){
+    	this.d;
+    }
+    MyDate.prototype.getString = function(timestamp){
+    	this.d = new Date(timestamp);
+    	return (" hello nitesh! it\'s - "+this.d.getDate()+"/"+(this.d.getMonth()+1)+"/"+ this.d.getFullYear()+"\t  OR "+this.d.toDateString());
+    };
+    var m=new MyDate();
+    $(document).ready(function(){
+    	$("h1").text(m.getString(1415958627281));	
+    }); */
+    
+    Date.prototype.getString= function(timestamp){
+    	return (" hello nitesh! it\'s - "+this.getDate()+"/"+(this.getMonth()+1)+"/"+ this.getFullYear()+"\t  OR "+this.toDateString());
+    };
+    var m=new Date();
+    $(document).ready(function(){
+        $("h1").text(m.getString(1415958627281));   
+    });
+    
+</script>
+</head>
+<body>
+<h1></h1>
+</body>
+</html>

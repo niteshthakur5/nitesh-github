@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Custom Events in jquery</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<style>
+.lightbulb{
+    background-color:#CCC;
+    width:100px;
+    height:100px;
+}
+.on{
+    background-color:yellow;
+}
+.off{
+    background-color:#CCC;
+}
+</style>
+</head>
+<body>
+<div>
+    <p class="test"></p>
+    <p class="test"></p>
+</div>
+<div>
+<p class="test"></p>
+<p class="test1"></p>
+</div>
+<button class="btn btn-info">click</button>
+<!-- <div class="room" id="kitchen">
+    <div class="lightbulb on"></div>
+    <div class="switch">switch1</div>
+    <div class="switch">switch2</div>
+    <div class="clapper">clapper</div>
+</div>
+<div>
+    <p class="lightbulb">nitesh </p>
+</div> -->
+
+<script type="text/javascript">
+    $("p.test").on("onStateChange",{name : "nitesh"},function(e, elem){
+    	$(this).text(elem+"  "+e.data.name+"!");
+    });
+    $("button").click(function(){
+    	$("p").trigger("onStateChange","hello");
+    });
+
+	/* $( ".switch, .clapper" ).click(function() {                                                    //bind event on lightbulb
+	    var light = $( this ).parent().find( ".lightbulb" );
+	    if ( light.hasClass( "on" ) ) {
+	        light.removeClass( "on" ).addClass( "off" );
+	    } else {
+	        light.removeClass( "off" ).addClass( "on" );
+	    }
+	}); 
+	/* $( ".lightbulb" ).on( "changeState", function( e ) {
+	    var light = $( this );
+	    if ( light.hasClass( "on" ) ) {
+	        light.removeClass( "on" ).addClass( "off" );
+	    } else {
+	        light.removeClass( "off" ).addClass( "on" );
+	    }
+	});
+	$( ".switch, .clapper" ).click(function() {
+	    $( this ).parent().find( ".lightbulb" ).trigger( "changeState" );
+	}); */
+</script>
+</body>
+</html>

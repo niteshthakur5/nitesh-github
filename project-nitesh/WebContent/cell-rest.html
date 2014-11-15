@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Cell through JSON</title>
+    <link href="css/cell.css" rel="stylesheet">
+    
+    <!-- Bootstrap -->
+    <link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <!-- ......................... JSON Data .......................................... -->
+<script type="text/javascript">
+    $(document).ready(function(){
+    	$(document).on("click",".cell",function(){
+            //$(this).hide();
+          // alert($(this).text());
+            $(this).css("color","red");
+            alert("ID : "+$(this).find("#BookID").attr("data-id")
+            	  +  "\nISBN : "+$(this).find("#isbn").attr("data-isbn")
+            	  +  "\nBook Title : "+$(this).find("#title").attr("data-title")
+            	  +  "\nSubtitle : "+$(this).find("#subtitle").attr("data-subtitle")
+            	  +  "\nDescription : "+$(this).find("#description").attr("data-description") 
+            );
+        });  
+    });
+    var url = 'http://www.json-generator.com/api/json/get/bUvxHuMyoO?indent=2';
+        $.ajax({
+            type: 'GET',
+            url: url,
+            async: false,
+            contentType: "application/json",
+            dataType: 'jsonp',
+            success:function(cell1){displayData(cell1);}
+        });
+    function displayData(cell1){
+        var result="";
+        var imgsrc="";
+        for(var i=0;i<cell1.Books.length;i++){
+        
+			imgsrc = cell1.Books[i].Image;
+					result += "<div class=\"cell\">" + 
+				                   "<span  id=\"BookID\" data-id=\""+cell1.Books[i].ID+"\"><h6> ID : " + cell1.Books[i].ID
+							+ "</h6></span>" + "<div class=\"thumbnail\">"
+							+ "<img src=\""+imgsrc+"\" alt=\"soccer image\">"
+							+ "</div>" + "<div class=\"caption\">"
+							+ "<h3 class=\"lable-color\" id=\"title\" data-title=\""+cell1.Books[i].Title+"\">" + cell1.Books[i].Title
+							+ "</h3>" + "<h5 id=\"subtitle\"  data-subtitle=\""+cell1.Books[i].SubTitle+"\">" + cell1.Books[i].SubTitle + "</h5>"
+							+ "<p id=\"description\" data-description=\""+cell1.Books[i].Description+"\" >" + cell1.Books[i].Description + "</p>"
+							+ "<a href=\"#\" class=\"link\" id=\"isbn\" data-isbn=\""+cell1.Books[i].isbn+"\" >ISBN : "
+							+ cell1.Books[i].isbn + "</a>" + "</div>" + "</div>";
+					var colHeight = [ $("#column-1").height(), $("#column-2").height(),
+							$("#column-3").height(), $("#column-4").height() ];
+					var min = Math.min(colHeight[0], colHeight[1], colHeight[2], colHeight[3]);
+					if (min == colHeight[0]) {
+						$("#column-1").append(result);
+						result = "";
+					} else if (min == colHeight[1]) {
+						$("#column-2").append(result);
+						result = "";
+					} else if (min == colHeight[2]) {
+						$("#column-3").append(result);
+						result = "";
+					} else if (min == colHeight[3]) {
+						$("#column-4").append(result);
+						result = "";
+					}
+		}
+	}
+</script>
+    
+  </head>
+<body>
+    
+       <!-- .............. default navigation bar ......................................... -->
+       <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+         <div class="container">
+           <div class="navbar-header">
+               <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myNavbar">
+                   <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>
+               </button>
+               <a class="navbar-brand" href="#">Autocreated Cells</a>
+           </div>
+           
+           <div class="collapse navbar-collapse" id="myNavbar">
+               <ul class="nav navbar-nav navbar-right nav-right">
+                   <li><a href="#">link1</a></li>
+                   <li><a href="#">link2</a></li>
+                   <li><a href="#">link3</a></li>
+                   
+               </ul>
+           </div>
+         </div>
+       </nav>
+    
+    <div class="container">
+        
+        <div class="col-xs-12 col-md-3 col-sm-5 " id="column-1">
+        </div>
+        <div class="col-xs-12 col-md-3 col-sm-5 " id="column-2">
+        </div>
+        <div class="col-xs-12 col-md-3 col-sm-5 " id="column-3">
+        </div>
+        <div class="col-xs-12 col-md-3 col-sm-5 " id="column-4">
+        </div>
+    </div> 
+   
+       
+</body>
+</html>

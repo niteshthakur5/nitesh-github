@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Cell-JAVA-JSON</title>
+   
+    <link href="css/cell.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
+    <script src="js/jquery.unveil.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    
+       <!-- .............. default navigation bar ......................................... -->
+     <div class="header">  
+       <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+         <div class="container">
+           <div class="navbar-header">
+               <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myNavbar">
+                   <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>
+               </button>
+               <a class="navbar-brand" href="#">Book Finder</a>
+           </div>
+           
+           <div class="collapse navbar-collapse" id="myNavbar">
+               <ul class="nav navbar-nav navbar-right">
+                   <li><a href="#">Home</a></li>
+                   <li><a href="#">About Us</a></li>
+                   <li><a href="#">Contact Us</a></li>    
+                   
+               </ul>
+           </div>
+         </div>
+       </nav>
+     </div>
+    <div class="container-fluid">
+        <div class="searchArea"> 
+            <form id="searchForm" method="post" class="searchArea">
+                <input type="text" name="search" id="search" placeholder="Enter Subject Here.."/>
+                <input type="submit" value="search book" />
+            </form>
+         </div> 
+        <div class="content">
+	        <div class="col-xs-4  col-sm-2 " id="column-0">
+	        </div>
+	        <div class="col-xs-4 col-sm-2 " id="column-1">
+	        </div>
+	        <div class="col-xs-4 col-sm-2 " id="column-2">
+	        </div>
+	        <div class="col-xs-4  col-sm-2" id="column-3">
+	        </div>
+	        <div class="col-xs-4  col-sm-2 " id="column-4">
+	        </div>
+        </div>
+        <div id="modal-data">
+        </div>
+    </div> 
+    <script type="text/javascript">
+        $(document).ready(function(){
+        	/* $(document).on("click",".cell",function(){
+		            //$(this).hide();
+		            // alert($(this).text());
+		            $(this).css("color","red");
+		            alert("ID : "+$(this).find(".id").attr("data-id")
+		                  +  "\nISBN : "+$(this).find(".isbn").attr("data-isbn")
+		                  +  "\nBook Title : "+$(this).find("h3").attr("data-title")
+		                  +  "\nSubtitle : "+$(this).find("h6").attr("data-subtitle")
+		                  +  "\nDescription : "+$(this).find("#desc").attr("data-description") 
+		            );
+		        });  */
+		     $(document).on("click",".more",function(){
+		         if($(this).text() == "more..."){
+		                $(this).prev().slideDown().delay(1000).show();
+		                $(this).text("...less");
+		          }else{
+		                $(this).prev().slideUp().delay(1000).hide();
+		                $(this).text("more...");
+		           }
+		    });
+		    $(document).on("click",".details",function(e){
+		    	var url = "http://it-ebooks-api.info/v1/book/"+$(this).find("#bookid").val();
+                var optParams = {
+                        url: 'getbooks',
+                        method: 'GET',
+                        dataParams: {
+                            'link' :url
+                        },
+                        callbacks: {
+                            success: function(res){
+                                displayModal(res);
+                            },
+                            error: function(){
+                                
+                            }
+                        }
+                };
+                ajaxRequest(optParams);
+
+	        });
+		    $("#searchForm").submit(function(e){
+                e.preventDefault();
+                //var url = "http://it-ebooks-api.info/v1/search/"+$("#search").val();
+                var url="http://www.json-generator.com/api/json/get/bZJmJBfpbC?indent=2";
+                var optParams = {
+                		url: 'getbooks',
+                		method: 'GET',
+                		dataParams: {
+                			link :url,
+                			limit: 20
+                		},
+                		callbacks: {
+                			success: function(res){
+                				displayData(res);
+                				//console.log($(".img-responsive").length);
+                				$(".img-animate").unveil(10,function(){
+                					$(this).load(function(){
+                						$(this).css({"opacity":"1",
+                 							         "width":"100%"
+//                  							         "-moz-transform":"rotate(360deg)"
+                						});
+                					});
+                				});
+                			},
+                			error: function(){
+                				
+                			}
+                		}
+                };
+                ajaxRequest(optParams);
+             });
+        });
+        function ajaxRequest(options){
+        	$.ajax({
+                type: options.method,
+                url: options.url,
+                contentType: "application/json",
+                dataType: 'json',
+                data: options.dataParams,
+                success: function(res){
+                	options.callbacks.success(res);
+                },
+                error: function(res){
+                	options.callbacks.error(res);
+                }
+            }); 
+        	
+        }
+        function displayModal(res){
+        	var obj={
+        			id: res.ID,
+        			title: res.Title,
+        			subTitle: res.SubTitle,
+        			imgsrc: res.Image,
+        			description: res.Description,        			
+        			author: res.Author,
+        			isbn: res.ISBN,
+        			publisher: res.Publisher,
+        			download: res.Download,
+        			year: res.Year
+        	};
+        	//console.log("result");
+        	var result=makeModal(obj); //console.log(result);
+        	//historyEntry(obj);
+        	$("#modal-data").html(result);
+        	$("#bookModal").modal("toggle");
+        }
+        function makeModal(obj){
+        	var result="";
+        	result="<div class=\"modal fade\" id=\"bookModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"bookModalLabel\" aria-hidden=\"true\">" +
+        	           "<div class=\"modal-dialog \">" +
+        	               "<div class=\"modal-content\">" +
+        	                   "<div class=\"modal-header\">" +
+        	                       "<button type=\"button\" class=\"close\" data-dismiss=\"modal\"><span aria-hidden=\"true\">&times;</span>" + 
+        	                       "</button>" +
+        	                       "<h4 class=\"modal-title\">Books Details</h4>" +
+        	                   "</div>" +
+        	                   "<div class=\"modal-body\">" +
+        	                       "<div class=\"row\">" +
+        	                           "<div class=\"col-sm-3\">" +
+        	                                "<img src=\""+obj.imgsrc+"\" alt=\"image not loaded\" class=\"img-responsive\">" +
+        	                           "</div>" +
+        	                           "<div class=\"col-sm-9\">" +
+        	                                "<h1>"+obj.title+"</h1>" +
+        	                                "<h4>"+obj.subTitle+"</h4>" + 
+        	                                "<h2>Description: </h2>" +
+        	                                "<p>"+obj.description+"</p>" +
+        	                           "</div>" +
+        	                       "</div>" +
+        	                       "<div class=\"row\">" +
+        	                           "<div class=\"col-sm-3\">" +
+        	                               "<a href=\""+obj.download+"\">download</a>" +
+        	                           "</div>" +
+        	                           "<div class=\"col-sm-9\">" +
+        	                               "<h3>Details: </h3>" +
+        	                               "<div class=\"col-sm-4 \">" +
+        	                                    "<p>Publisher: </p>" + 
+        	                                    "<p>ISBN: </p>" +
+        	                                    "<p>Year: </p>" +
+        	                               "</div>" +
+        	                               "<div class=\"col-sm-5\">" +
+        	                                   "<p>"+obj.publisher+"</p>" +
+        	                                   "<p>"+obj.isbn+"</p>" +
+        	                                   "<p>"+obj.year+"</p>" +
+        	                               "</div>" +
+        	                           "</div>" +
+        	                       "</div>" +
+        	                   "</div>" +
+        	               "</div>" +
+                   "</div>";
+                   return result;
+        }
+//         function historyEntry(obj){
+ //       	var id= obj.id+".html"; 
+//         	history.pushState(obj, "Modal",obj.id+".html");
+//         	var url=history.state;
+//         	console.log(url);
+//         }
+    function displayData(cells){
+    	$("#column-0,#column-1,#column-2,#column-3,#column-4").empty();
+    	//$("#column-0").empty();
+    	var noOfColumn=5;
+    	for(var i=0;i<cells.Books.length;i++){
+        	var obj={
+        		imgsrc:	cells.Books[i].Image,
+        		title: cells.Books[i].Title,
+        		subTitle: cells.Books[i].SubTitle,
+        		description: cells.Books[i].Description,
+        		id: cells.Books[i].ID
+        	};
+        	var result = makeHTML(obj);
+        	var colnum=i%noOfColumn;
+        	$("#column-"+colnum).append(result);
+        }
+     }
+    function makeHTML(obj){
+    	var result="";
+    	result+= "<div class=\"cell\">" +
+			        "<div class=\"book-img\">" +
+			            "<div class=\"img-responsive\">" + 
+			            "<img src=\"images/placeholder.jpg\" data-src=\""+obj.imgsrc+"\" class=\"img-animate\" alt=\"Image not loaded\">" +
+			            "</div>" +
+			        "</div>" +
+			        "<div class=\"title\">" +
+			            "<h3 data-title=\""+obj.title+"\">"+obj.title +"</h3>" +
+			            "<h6 data-subtitle=\""+obj.subTitle+"\"> - "+obj.subTitle+"</h6>" +
+			            "<div class=\"description\">" +
+			                "<p id=\"desc\" data-description=\""+obj.description+"\" >" +
+			                      "<span>"+obj.description.substr(0,50)+"</span>" +
+			                      "<span style=\"display:none;\">" + obj.description.substr(50)+"</span>" +
+			                      "<a class=\"more\">more...</a>" + 
+			                "</p>" +
+			            "</div>" +
+			        "</div>" +
+			        "<div class=\"tab clearfix\">" +
+// 			            "<div class=\"row\">" +
+			                "<div class=\"download\">" +
+			                    "<span class=\"button-color\"><button type=\"button\" class=\"btn btn-primary btn-xs\">" +
+			                            "<span class=\"glyphicon glyphicon-download \"></span> Download" + 
+			                    "</button></span>" +                            
+			                "</div>" +
+			                "<div class=\"details\">" +
+			                    "<span class=\"button-color\"><button type=\"button\" class=\"btn btn-primary btn-xs\">" +
+			                        "<span class=\"glyphicon glyphicon-resize-full \"></span> Details" + 
+			                        "<input type=\"hidden\" value=\""+obj.id+"\" id=\"bookid\" name=\"bookid\">" +
+			                    "</button></span>" +
+			                    
+// 			                "</div>" +
+			            "<\div>" +
+			        "</div>" +
+			    "</div>";
+			    return result;
+	}
+                      
+              
+        </script>
+    
+   
+       
+</body>
+</html>
