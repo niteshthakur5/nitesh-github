@@ -104,6 +104,9 @@ h1,h2,h3,h4,h5,h6{
     clear:both;
     display:none;
 }
+.hidden{
+    display:none;
+}
 .clearfix:AFTER{ visibility: hidden;
     display: block;
     font-size: 0;

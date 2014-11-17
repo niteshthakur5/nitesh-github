@@ -10,19 +10,25 @@ GridView=function (colnum){
 		_registerEvents();
 	};
 	var _registerEvents=function(){
-		$(document).on("click","#login",function(){
+		$(document).on("click","#logout",function(e){
+			_logout();
+		});
+		$(document).on("click","#login",function(e){
 			$("#login-modal").modal("show");
 		});
 		$(".user-login").click(function(e){
 			e.preventDefault();
 			_authanticateUser();
-			$("#login").text("Logout");
+			
 		});
-		$(document).on("click",".cell",function(){
+		$(document).on("showtab",".tab",function(){
+			$(".tab").show();
+		});
+		$(document).on("click",".cell",function(e){
 			if(_isSession==true){
             	var bookno=$(this).find("#bookid").val();
         		_self.showDetails(bookno);
-            }else{
+        	}else{
             	$("#login-modal").modal("show");
             }
         });
@@ -32,11 +38,12 @@ GridView=function (colnum){
     		_self.searchBook(_subjectName);
     	});
 		$(document).on("click",".details",function(e){
+			var bookno=$(this).find("#bookid").val();
 			e.stopPropagation();
-    		var bookno=$(this).find("#bookid").val();
     		_self.showDetails(bookno);
+    		//e.stopPropagation();
     	});
-		$(document).on("click",".more",function(){
+		$(document).on("click",".more",function(e){
 			var elem = $(this);
 			elem.parent().find(".more-desc").slideToggle("slow"); 
 			var elemText = elem.text();
@@ -44,7 +51,8 @@ GridView=function (colnum){
 				elem.text("...less");
 			}else{
 				elem.text("more...");
-			}				
+			}		
+			e.stopPropagation();
         });
 		$(window).scroll(function(){
 			if($(window).scrollTop()==0){
@@ -59,7 +67,6 @@ GridView=function (colnum){
 		$(".to-top").click(function(){
 			$("html,body").animate({"scrollTop":"0"},800);
 		});
-		
 	};
 	this.searchBook=function(_subjectName){
 		var url = "http://it-ebooks-api.info/v1/search/"+_subjectName+"/page/"+_self.pageNo;
@@ -78,7 +85,11 @@ GridView=function (colnum){
                 				$(this).removeClass("img-animate").addClass("img-effect");
                 			});
                 		});
+                		_makeHistoryForPages(_subjectName);
                 		_self.reqInProgress = false;
+                		if(_isSession){
+                			$(".tab").trigger("showtab");
+                		}
                 	},
                 	error: function(){
                 			   console.log("No Response!!");
@@ -93,39 +104,33 @@ GridView=function (colnum){
         }
 	};
 	var _displayData= function(cells){
-		var colArr = ["","","","",""];
+		colObj = {"col0" : [],
+    			"col1" : [],
+    			"col2" : [],
+    			"col3" : [],
+    			"col4" : [],
+    	};
 		for(var i=0;i<cells.Books.length;i++){
-        	var obj={
-        		imgsrc:	cells.Books[i].Image,
-        		title: cells.Books[i].Title,
-        		subTitle: cells.Books[i].SubTitle,
-        		description: cells.Books[i].Description,
-        		id: cells.Books[i].ID
-        	};
-        	var result = GridView.getHTMLCell(obj);
+        	var result = GridView.getHTMLCell(cells,i);
         	var colnum=i%_self.noOfColumn; 
         	switch(colnum){
-        		case 0 :colArr[colnum] += result;
+        		case 0 :colObj["col"+colnum].push(result);
         				break;
-        		case 1 :colArr[colnum] += result;
+        		case 1 :colObj["col"+colnum].push(result);
 						break;
-        		case 2 :colArr[colnum] += result;
+        		case 2 :colObj["col"+colnum].push(result);
 						break;
-        		case 3 :colArr[colnum] += result;
+        		case 3 :colObj["col"+colnum].push(result);
 						break;
-        		case 4 :colArr[colnum] += result;
+        		case 4 :colObj["col"+colnum].push(result);
 						break;
 				default: console.log("Error");
         	}
         }
-		for(var i=0;i<colArr.length;i++){
-			$("#column-"+i).append(colArr[i]);
+		for(var i=0;i<5;i++){
+			$("#column-"+i).append(colObj["col"+i].join(" "));
 		}
-		if(_isSession==true){
-			$("#login-modal").modal("hide");
-			$(".tab").show();
-		}
-    };
+	};
 	this.showDetails= function(bookno){
 		var url = "http://it-ebooks-api.info/v1/book/"+bookno;
         var optParams={
@@ -150,33 +155,14 @@ GridView=function (colnum){
 		var result=GridView.getHTMLModal(res);
 		$("#modal-data").html(result);
         $("#bookModal").modal("toggle");
+        _makeHistoryForModals(res);
 	};
 	var _authanticateUser = function(){
 		var username = $("#username").val();
 		var password = $("#password").val();
-/*		$.ajax({
-			type:'GET',
-			url:"authanticateuser",
-			contentType: "application/json",
-		    dataType: 'json',
-		    data: {
-		    	'user' :username,
-		    	'pass' :password
-		    },
-		    success:function(res){
-		    	_isSession = res; 
-		    	console.log(_isSession);
-		    	if(_isSession==true){
-		    		$("#login-modal").modal("hide");
-				}
-		    },
-		    error:function(res){
-		    	console.log("failed");
-		    }
-		});*/
 		var optParams = {
 				url:'authanticateuser',
-				method:'GET',
+				method:'POST',
 				dataParams:{
                 	'user' :username,
 		    		'pass' :password
@@ -187,6 +173,9 @@ GridView=function (colnum){
 		    			console.log(_isSession);
 		    			if(_isSession==true){
 		    				$("#login-modal").modal("hide");
+		    				$("#login").addClass("hidden");
+		    				$("#logout").removeClass("hidden");
+		    				$(".tab").trigger("showtab");
 						}
 					},
 					error: function(res){
@@ -196,6 +185,53 @@ GridView=function (colnum){
 		};
 		GridView.ajaxRequest(optParams);
 	};
+	var _logout = function(){
+		var optParams = {
+				url:'logout',
+				method:'POST',
+				callbacks:{
+					success: function(res){
+						_isSession = res;
+						$("#logout").addClass("hidden");
+						$("#login").removeClass("hidden");
+						$(".tab").hide();
+		    		},
+					error: function(res){
+						console.log("failed");
+					}
+				}
+		};
+		GridView.ajaxRequest(optParams);
+	};
+	var _makeHistoryForModals = function(res){
+		history.pushState({id : res.ID},"book-id : "+res.ID,res.ID);
+	};
+	var _makeHistoryForPages = function(res){
+		history.pushState({subName : res},"subject-name : "+res,res);
+	};
+	window.onpopstate = function(){
+		_loadContent(location.pathname,history.state);
+	};
+	var _loadContent = function(url,obj){
+		console.log(obj);
+		if(typeof obj.id == "undefined"){
+			 
+			$(".column").empty();
+			//console.log(id[id.length-1]);
+			_self.searchBook(obj.subName);
+		}else{
+			_self.showDetails(obj.id);
+		}
+		/*var id = url.toString().split("/");
+		if(parseInt(id[id.length-1])){
+			console.log(id[id.length-1]);
+			_self.showDetails(id[id.length-1]);
+		}else{
+			$(".column").empty();
+			console.log(id[id.length-1]);
+			_self.searchBook(id[id.length-1]);
+		}*/
+	};
 	_init();
 };
 //make ajax request
@@ -203,7 +239,7 @@ GridView.ajaxRequest=function(options){
 	$.ajax({
 		type:options.method,
 		url:options.url,
-		contentType: "application/json",
+//		contentType: "application/json",
 	    dataType: 'json',
 	    data: options.dataParams,
 	    success:function(res){
@@ -215,23 +251,23 @@ GridView.ajaxRequest=function(options){
 	});
 };
 // return html code for cells
-GridView.getHTMLCell= function(obj){
+GridView.getHTMLCell= function(obj,i){
 	var result="";
 	result+= "<div class=\"cell\">" +
 		        "<div class=\"book-img\">" +
 		            "<div class=\"img-responsive\">" + 
-		            "<img src=\"images/placeholder.jpg\" data-src=\""+obj.imgsrc+"\" class=\"img-animate\" alt=\"Image not loaded\">" +
+		            "<img src=\"images/placeholder.jpg\" data-src=\""+obj.Books[i].Image+"\" class=\"img-animate\" alt=\"Image not loaded\">" +
 		            "</div>" +
 		        "</div>" +
 		        "<div class=\"title\">" +
-		            "<h3 data-title=\""+obj.title+"\">"+obj.title +"</h3>";
-					if(typeof(obj.subTitle)!="undefined"){
-						result+="<h6 data-subtitle=\""+obj.subTitle+"\"> - "+obj.subTitle+"</h6>";
+		            "<h3 data-title=\""+obj.Books[i].Title+"\">"+obj.Books[i].Title +"</h3>";
+					if(typeof(obj.Books[i].SubTitle)!="undefined"){
+						result+="<h6 data-subtitle=\""+obj.Books[i].SubTitle+"\"> - "+obj.Books[i].SubTitle+"</h6>";
 					}
 		            result+="<div class=\"description\">" +
-		                "<p id=\"desc\" data-description=\""+obj.description+"\" >" +
-		                      "<span>"+obj.description.substr(0,50)+"</span>" +
-		                      "<span class=\"more-desc\" style=\"display:none;\">" + obj.description.substr(50)+"</span>" +
+		                "<p id=\"desc\" data-description=\""+obj.Books[i].Description+"\" >" +
+		                      "<span>"+obj.Books[i].Description.substr(0,50)+"</span>" +
+		                      "<span class=\"more-desc\" style=\"display:none;\">" + obj.Books[i].Description.substr(50)+"</span>" +
 		                      "<a class=\"more\" >more...</a>" + 
 		                "</p>" +
 		            "</div>" +
@@ -245,9 +281,9 @@ GridView.getHTMLCell= function(obj){
 		                "<div class=\"details\">" +
 		                    "<span class=\"button-color\"><button type=\"button\" class=\"btn btn-primary btn-xs\">" +
 		                        "<span class=\"glyphicon glyphicon-resize-full \"></span> Details" + 
-		                        "<input type=\"hidden\" value=\""+obj.id+"\" id=\"bookid\" name=\"bookid\">" +
+		                        "<input type=\"hidden\" value=\""+obj.Books[i].ID+"\" id=\"bookid\" name=\"bookid\">" +
 		                    "</button></span>" +
-		            "<\div>" +
+		            "</div>" +
 		        "</div>" +
 		    "</div>";
 	return result;
