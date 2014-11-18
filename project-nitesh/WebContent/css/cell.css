@@ -21,6 +21,9 @@ body{
 .header .nav > li > a {
       padding: 15px;
 }
+.fbusername{
+    display:inline;
+}
 .column{
     float:left;
     margin-right:14px;

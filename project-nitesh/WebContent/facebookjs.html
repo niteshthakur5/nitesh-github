@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Facebook JS SDK</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script>
+   $(document).ready(function() {
+	  $.ajaxSetup({ cache: true });
+	  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+	    FB.init({
+	      appId: '596046917191158',
+	      status : true,
+	      xfbml : true
+	    });     
+	  });
+	  function checkLoginState(){
+		  FB.getLoginStatus(function(response){
+			  status(response);
+		  });
+	  }
+	  function status(response){
+		  //console.log(response);
+		  if(response.status == "connected"){
+			  console.log("success");
+			  showUserDetails();
+		  }else if(response.status == "not_authorized"){
+			  console.log("not authorized");
+		  }else if(response.status == "unknown"){
+			  console.log("unknown");
+		  }
+	  }
+	  $(".login-button").click(function(){
+		  FB.login(function(){
+			  checkLoginState();
+		  });
+	  });
+	  $(".logout-button").click(function(response){
+		  FB.logout(function(response) {
+		        $(".username").text("successfully logout");
+		  });
+	  });
+	  function showUserDetails(){
+		FB.api("/me",function(response){ 
+			$(".username").text(response.name);
+			getProfilePic();
+		});  
+	  }
+	  function getProfilePic(){
+		  FB.api("/me/picture",function(response){ console.log(response);
+	            $("img").attr("src",response.data.url);
+	      }); 
+	  }
+   });
+   
+</script>
+<style>
+.logout-button{
+    margin-left:600px;
+}
+</style>
+</head>
+<body>
+<button type="button" class="login-button">Login</button>
+<button type="button" class="logout-button">Logout</button>
+<div class="fb-data">
+    <img src=""/>
+    <p class="username"></p>
+    
+</div>
+<!-- <div
+  class="fb-like"
+  data-send="true"
+  data-width="450"
+  data-show-faces="true">
+</div> -->
+</body>
+</html>

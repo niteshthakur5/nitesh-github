@@ -21,6 +21,19 @@ GridView=function (colnum){
 			_authanticateUser();
 			
 		});
+		$(".user-fb-login").click(function(){
+			$.ajaxSetup({ cache: true });
+			  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+			    FB.init({
+			      appId: '596046917191158',
+			      status : true,
+			      xfbml : true
+			  });     
+			});
+			FB.login(function(){
+				  _checkLoginState();
+			});
+		});
 		$(document).on("showtab",".tab",function(){
 			$(".tab").show();
 		});
@@ -68,6 +81,32 @@ GridView=function (colnum){
 			$("html,body").animate({"scrollTop":"0"},800);
 		});
 	};
+	var _checkLoginState = function(){
+		  FB.getLoginStatus(function(response){
+			  _status(response);
+		  });
+	};
+	var _status = function(response){
+		if(response.status == "connected"){
+			  console.log("success");
+			  _showFBUserDetails();
+		  }else if(response.status == "not_authorized"){
+			  console.log("not authorized");
+		  }else if(response.status == "unknown"){
+			  console.log("unknown");
+		  }
+	}; 
+	var _showFBUserDetails = function(){
+		FB.api("/me",function(response){ 
+			$(".fbusername").text(response.name);
+			_getProfilePic();
+		});  
+	};
+	var _getProfilePic = function(){
+		FB.api("/me/picture",function(response){ console.log(response);
+            $(".profile-pic").attr("src",response.data.url);
+        }); 
+    };
 	this.searchBook=function(_subjectName){
 		var url = "http://it-ebooks-api.info/v1/search/"+_subjectName+"/page/"+_self.pageNo;
         // var url="http://www.json-generator.com/api/json/get/bZJmJBfpbC?indent=2";
@@ -214,7 +253,7 @@ GridView=function (colnum){
 	};
 	var _loadContent = function(url,obj){
 		console.log(obj);
-		if(typeof obj.id == "undefined"){
+		if(obj.id === "undefined"){
 			 
 			$(".column").empty();
 			//console.log(id[id.length-1]);
