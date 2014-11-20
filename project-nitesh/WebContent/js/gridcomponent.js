@@ -10,10 +10,12 @@ GridView=function (colnum){
 		_registerEvents();
 	};
 	var _registerEvents=function(){
-		$(document).on("click","#logout",function(e){
+		// for logout button
+		$(document).on("click","#logout",function(){
 			_logout();
 		});
-		$(document).on("click","#login",function(e){
+		//for login button
+		$(document).on("click","#login",function(){
 			$("#login-modal").modal("show");
 		});
 		$(".user-login").click(function(e){
@@ -21,49 +23,49 @@ GridView=function (colnum){
 			_authanticateUser();
 			
 		});
-		$(".user-fb-login").click(function(){
-			$.ajaxSetup({ cache: true });
-			  $.getScript('//connect.facebook.net/en_UK/all.js', function(){
-			    FB.init({
-			      appId: '596046917191158',
-			      status : true,
-			      xfbml : true
-			  });     
-			});
-			FB.login(function(){
+		// for fb user login
+		$(document).on("click",".user-fb-login",function(){
+			FB.login(function(){ 
 				  _checkLoginState();
 			});
 		});
 		$(document).on("showtab",".tab",function(){
 			$(".tab").show();
 		});
-		$(document).on("click",".cell",function(e){
+		$(document).on("click",".cell",function(){
 			if(_isSession==true){
             	var bookno=$(this).find("#bookid").val();
         		_self.showDetails(bookno);
+        		 _makeHistoryForModals(bookno);
         	}else{
             	$("#login-modal").modal("show");
             }
         });
+		$(document).on("mouseover",".cell",function(){
+			if(!_isSession){
+				$(this).tooltip("show");
+			}
+		});
 		$("#processValue").click(function(){
     		_subjectName = $("#search").val();
     		$(".column").empty();
     		_self.searchBook(_subjectName);
+    		_makeHistoryForPages(_subjectName);
     	});
 		$(document).on("click",".details",function(e){
 			var bookno=$(this).find("#bookid").val();
 			e.stopPropagation();
     		_self.showDetails(bookno);
-    		//e.stopPropagation();
+    		 _makeHistoryForModals(bookno);
     	});
 		$(document).on("click",".more",function(e){
 			var elem = $(this);
 			elem.parent().find(".more-desc").slideToggle("slow"); 
 			var elemText = elem.text();
-			if(elemText=="more..."){
+			if(elemText==" more..."){
 				elem.text("...less");
 			}else{
-				elem.text("more...");
+				elem.text(" more...");
 			}		
 			e.stopPropagation();
         });
@@ -80,15 +82,20 @@ GridView=function (colnum){
 		$(".to-top").click(function(){
 			$("html,body").animate({"scrollTop":"0"},800);
 		});
+	
 	};
+	// get facebook data
 	var _checkLoginState = function(){
-		  FB.getLoginStatus(function(response){
+		  FB.getLoginStatus(function(response){ 
+			  console.log(response);
 			  _status(response);
 		  });
 	};
 	var _status = function(response){
 		if(response.status == "connected"){
 			  console.log("success");
+			  $("#login").addClass("hidden");
+			  $(".profile-pic").removeClass("hidden");
 			  _showFBUserDetails();
 		  }else if(response.status == "not_authorized"){
 			  console.log("not authorized");
@@ -124,7 +131,7 @@ GridView=function (colnum){
                 				$(this).removeClass("img-animate").addClass("img-effect");
                 			});
                 		});
-                		_makeHistoryForPages(_subjectName);
+                		$(".search-result").text("search result for : "+_subjectName);
                 		_self.reqInProgress = false;
                 		if(_isSession){
                 			$(".tab").trigger("showtab");
@@ -193,8 +200,9 @@ GridView=function (colnum){
 	var _displayModal= function(res){
 		var result=GridView.getHTMLModal(res);
 		$("#modal-data").html(result);
-        $("#bookModal").modal("toggle");
-        _makeHistoryForModals(res);
+        $("#bookModal").modal("show");/*.on("hidden.bs.modal", function(){
+        	_makeHistoryForModals("n");
+        });*/
 	};
 	var _authanticateUser = function(){
 		var username = $("#username").val();
@@ -243,33 +251,21 @@ GridView=function (colnum){
 		GridView.ajaxRequest(optParams);
 	};
 	var _makeHistoryForModals = function(res){
-		history.pushState({id : res.ID},"book-id : "+res.ID,res.ID);
+		history.pushState({id : res},"book-id : "+res,res);
 	};
 	var _makeHistoryForPages = function(res){
 		history.pushState({subName : res},"subject-name : "+res,res);
 	};
 	window.onpopstate = function(){
-		_loadContent(location.pathname,history.state);
+		_loadContent(history.state);
 	};
-	var _loadContent = function(url,obj){
-		console.log(obj);
-		if(obj.id === "undefined"){
-			 
+	var _loadContent = function(obj){
+		if(obj.id === undefined){
 			$(".column").empty();
-			//console.log(id[id.length-1]);
 			_self.searchBook(obj.subName);
 		}else{
 			_self.showDetails(obj.id);
 		}
-		/*var id = url.toString().split("/");
-		if(parseInt(id[id.length-1])){
-			console.log(id[id.length-1]);
-			_self.showDetails(id[id.length-1]);
-		}else{
-			$(".column").empty();
-			console.log(id[id.length-1]);
-			_self.searchBook(id[id.length-1]);
-		}*/
 	};
 	_init();
 };
@@ -292,7 +288,7 @@ GridView.ajaxRequest=function(options){
 // return html code for cells
 GridView.getHTMLCell= function(obj,i){
 	var result="";
-	result+= "<div class=\"cell\">" +
+	result+= "<div class=\"cell\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"click on cell for download.\">" +
 		        "<div class=\"book-img\">" +
 		            "<div class=\"img-responsive\">" + 
 		            "<img src=\"images/placeholder.jpg\" data-src=\""+obj.Books[i].Image+"\" class=\"img-animate\" alt=\"Image not loaded\">" +
@@ -307,7 +303,7 @@ GridView.getHTMLCell= function(obj,i){
 		                "<p id=\"desc\" data-description=\""+obj.Books[i].Description+"\" >" +
 		                      "<span>"+obj.Books[i].Description.substr(0,50)+"</span>" +
 		                      "<span class=\"more-desc\" style=\"display:none;\">" + obj.Books[i].Description.substr(50)+"</span>" +
-		                      "<a class=\"more\" >more...</a>" + 
+		                      "<a class=\"more\" > more...</a>" + 
 		                "</p>" +
 		            "</div>" +
 		        "</div>" +

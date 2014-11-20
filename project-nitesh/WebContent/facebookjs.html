@@ -31,7 +31,7 @@
 		  }
 	  }
 	  $(".login-button").click(function(){
-		  FB.login(function(){
+		  FB.login(function(response){ console.log(response);
 			  checkLoginState();
 		  });
 	  });
@@ -61,8 +61,8 @@
 </style>
 </head>
 <body>
-<button type="button" class="login-button">Login</button>
-<button type="button" class="logout-button">Logout</button>
+<button type="button" class="login-button">FaceBook Login</button>
+<button type="button" class="logout-button">FaceBook Logout</button>
 <div class="fb-data">
     <img src=""/>
     <p class="username"></p>

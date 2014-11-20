@@ -42,17 +42,29 @@
                    <li><a href="#">About Us</a></li>
                    <li><a href="#">Contact Us</a></li>    
                    <li><button class="btn btn-info btn-sm" style="margin-top: 10px;" id="login" data-toggle="modal" data-target="#login-modal">Login</button></li>
-                   <li><button class="btn btn-info btn-sm hidden" style="margin-top: 10px;" id="logout">Logout</button></li>
-                   <li><img src="" class=".profile-pic"/></li>
-                   <li> <p class="fbusername"></p></li>
-               </ul>
+                   <li><button class="btn btn-info btn-sm hidden" style="margin-top: 10px;" id="logout">Logout</button></li> 
+                   
+<!--                    <li><img src="" class="profile-pic hidden"/></li> -->
+                   <!-- <li> <p class="fbusername"></p></li> -->
+               <li>
+               <div class="dropdown">
+                   <img src="" class="profile-pic dropdown-toggle hidden" id="img-dropdown" data-toggle="dropdown" aria-expanded="true">
+                   <div class="dropdown-menu" role="menu" aria-labeledby="imgdropdown">
+                        <p class="fbusername"></p>
+                        <button class="btn btn-info btn-sm" style="margin-top: 10px;" id="logout">Logout</button>
+                   </div>
+               </div>
+               </li>
+              </ul> 
            </div>
          </div>
        </nav>
      </div>
     <div class="container">
         <div class="row"> 
-            <div class="col-xs-offset-7 col-xs-5 text-right">
+            <div class="col-xs-7 text-left search-result">
+            </div>
+            <div class="col-xs-5 text-right">
                 <input type="text" name="search" id="search" placeholder="Enter Subject Here.." class="input-sm"/>
                 <input type="submit" value="search book" id="processValue" class="btn btn-info btn-sm"  />
             </div>
@@ -104,8 +116,16 @@
         </div>
     </div> 
     
-    <script>
+    <script type="text/javascript">
         $(document).ready(function(){
+        	$.ajaxSetup({ cache: true });
+            $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+              FB.init({
+                appId: '596046917191158',
+                status : true,
+                
+             });     
+          });
         	var c=new GridView(5);
         });
     </script>
