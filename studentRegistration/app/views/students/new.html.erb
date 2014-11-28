@@ -1,0 +1,40 @@
+<%@title = "Registration"%>
+<div class="container">
+		<h1>Student - Registration</h1>
+		<%= form_for :students, url: students_path do |s| %>
+		  <%if @students.errors.any?%>
+		    <div id="error_explanation">
+				<ul>
+					<%@students.errors.full_messages.each do |msg|%>
+					  <li><%=msg%></li>
+					<%end%>
+				</ul>
+			</div>
+		  <%end%>
+			<p>
+				<%= s.label(:fName," First Name" ) %>&nbsp;&nbsp;&nbsp;&nbsp;
+				<%= s.text_field :fName%>
+			</p>
+			<p>
+				<%= s.label(:lName," Last Name" )%>&nbsp;&nbsp;&nbsp;&nbsp;
+				<%= s.text_field :lName%>
+			</p>
+			<p>
+				<%= s.label :gender %>&nbsp;&nbsp;&nbsp;&nbsp;
+				<%= s.radio_button "gender", "male",{:checked =>"checked"} %>Male
+				<%= s.radio_button "gender", "female"%>Female
+			</p>
+			<p>
+				<%= s.label :course %>&nbsp;&nbsp;&nbsp;&nbsp;
+				<%= s.select(:course, options_for_select([["MCA","mca"],["BCA","bca"]]), {prompt: "select"})%>
+			</p>
+			<p>
+				<%= check_box_tag(:confirm)%>
+				<%= s.label(:confirm, "I accept")%>
+			</p>
+			<p>
+				<%= s.submit("submit", :class => "btn btn-info") %>
+				<%=link_to "Back",root_path, {class:"btn btn-info"} %>
+			</p>
+		<%end%>
+	</div>

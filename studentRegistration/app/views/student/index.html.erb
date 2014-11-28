@@ -1,0 +1,46 @@
+<%@title = "Home"%>
+<div class="container">
+	<h1>Student's Info: <%=link_to "Register a student", new_student_path, {class:"btn btn-info right"}%></h1>
+	<div class="row"> <strong>
+		<div class="col-xs-2">
+			First Name
+		</div>
+		<div class="col-xs-2">
+			Last Name
+		</div>
+		<div class="col-xs-1">
+			Gender
+		</div>
+		<div class="col-xs-1">
+			Course
+		</div></strong>
+	</div>
+	<%@students.each do |s|%>
+		<div class="row">
+			<div class="col-xs-2">
+				<%= s.fName%>
+			</div>
+			<div class="col-xs-2">
+				<%= s.lName%>
+			</div>
+			<div class="col-xs-1">
+				<%= s.gender%>
+			</div>
+			<div class="col-xs-1">
+				<%= s.course%>
+			</div>
+			<div class="col-xs-1">
+				<%= link_to "show",student_path(s),{:class=>"btn btn-default"}%>
+			</div>
+			<div class="col-xs-1">
+				<%= link_to "Edit",edit_student_path(s), {:class=>"btn btn-default"}%>
+			</div>
+			<div class="col-xs-1">
+				<%= link_to "Delete",student_path(s), method: :delete, data: {confirm: "Are you sure?"},class: "btn btn-default"%>
+			</div>
+		</div>
+	<%end%>
+	<button class="btn btn-info" id="json" >json</button>
+	<div id="json-here">
+	</div>
+</div>

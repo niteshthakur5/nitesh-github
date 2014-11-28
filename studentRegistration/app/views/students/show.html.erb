@@ -1,0 +1,23 @@
+<%@title = "Student Info"%>
+ 
+<div class="container">
+	<h1>Student Profile</h1>
+	<p>
+	  <strong>First Name:</strong>
+	  <%= @students.fName %>
+	</p>
+	 
+	<p>
+	  <strong>Last Name:</strong>
+	  <%= @students.lName %>
+	</p>
+	<p>
+	  <strong>Gender:</strong>
+	  <%= @students.gender %>
+	</p>
+	<p>
+	  <strong>Course:</strong>
+	  <%= @students.course %>
+	</p>
+	<%=link_to "Back",root_path, {class:"btn btn-info"} %>
+</div>
