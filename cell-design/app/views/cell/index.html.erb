@@ -1,0 +1,96 @@
+ <%= javascript_include_tag "cell"%>
+ <div class="header">  
+       <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+         <div class="container">
+           <div class="navbar-header">
+               <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myNavbar">
+                   <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>
+               </button>
+               <a class="navbar-brand" href="#">Book Finder</a>
+             <!--   <div class="fb-data">
+				    <img src=""/>
+				    <p class="fbusername">username</p>
+               </div> -->
+           </div>
+           
+           <div class="collapse navbar-collapse  navbar-right" id="myNavbar">
+               <ul class="nav navbar-nav">
+                   <li><a href="#">Home</a></li>
+                   <li><a href="#">About Us</a></li>
+                   <li><a href="#">Contact Us</a></li>    
+				   <li><%=button_tag("Login",class:"btn btn-info btn-sm",id:"login",type:"button", style:"margin-top:10px", data: {toggle: "modal", target: "#login-modal"})%></li>
+                   <li><%=button_tag("Logout",class:"btn btn-info btn-sm hidden",id:"logout",type:"button", style:"margin-top:10px")%></li>
+				                     
+<!--                    <li><img src="" class="profile-pic hidden"/></li> -->
+                   <!-- <li> <p class="fbusername"></p></li> -->
+               <li>
+               <div class="dropdown">
+                   <img src="" class="profile-pic dropdown-toggle hidden" id="img-dropdown" data-toggle="dropdown" aria-expanded="true">
+                   <div class="dropdown-menu" role="menu" aria-labeledby="imgdropdown">
+                        <p class="fbusername"></p>
+                        <button class="btn btn-info btn-sm" style="margin-top: 10px;" id="logout">Logout</button>
+                   </div>
+               </div>
+               </li>
+              </ul> 
+           </div>
+         </div>
+       </nav>
+     </div>
+    <div class="container">
+        <div class="row"> 
+            <div class="col-xs-7 text-left search-result">
+            </div>
+            <div class="col-xs-5 text-right">
+				<%=text_field_tag("search","",placeholder:"Enter Subject Here..",class:"input-sm")%>
+				<%=button_tag "search book", id:"processValue", class:"btn btn-info btn-sm", type:"button" %>
+            </div>
+        </div> 
+        <div class="content row clearfix">
+            <div class="column" id="column-0">
+            </div>
+            <div class="column" id="column-1">
+            </div>
+            <div class="column" id="column-2">
+            </div>
+            <div class="column" id="column-3">
+            </div>
+            <div class="column" id="column-4">
+            </div>
+        </div>
+        <div id="modal-data">
+        </div> 
+        <div class="modal fade bs-example-modal-sm" role="dialog" id="login-modal" aria-hidden="true">
+             <div class="modal-dialog modal-sm">
+				 <div class="modal-content">
+				    <div class="modal-header">
+                        <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                        <h3 class="modal-title">Login: </h3>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" class="form-horizontal" method="post">
+                            <div class="form-group">
+                                <label for="username" class="control-label col-sm-3">Username: </label>
+                                <div class="col-sm-8">
+									<%=text_field_tag "username","", class:"form-control"%>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="control-label col-sm-3">Password:  </label>
+                                <div class="col-sm-8">
+									<%=password_field_tag "password","", class:"form-control"%>
+                                </div> 
+                            </div>
+							<%=button_tag "Login", class:"btn btn-primary user-login"%>
+							<%=button_tag "Login with FaceBook", class:"btn btn-primary user-fb-login"%>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-to-top">
+            <%=image_tag("arrow-up.png", alt:"Scroll to top", class:"to-top")%>
+		</div>
+    </div> 
+<%=flash[:notice]%>
