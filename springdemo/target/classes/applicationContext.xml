@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+<!--     <bean id="triangle" class="com.demo.spring.Triangle"> -->
+        <!-- <property name="type" value="equilateral"></property> -->         <!-- setter injection -->
+        <!-- <property name="height" value="30"></property> -->
+<!--         <constructor-arg value="30" type="int"></constructor-arg>                               constructor injection -->
+<!--         <constructor-arg value="equilateral" type="java.lang.String"></constructor-arg> -->
+<!--     </bean> -->
+
+    <bean id="triangle" class="com.demo.spring.Triangle" >
+         <property name="points">
+            <list>
+                <ref bean="first"/>
+                <ref bean="second"/>
+                <ref bean="third"/>
+            </list>
+         </property>
+    </bean>
+    
+    <bean id="first" class="com.demo.spring.Point">
+        <property name="x" value="0" />
+        <property name="y" value="0"/>
+    </bean>
+    <bean id="second" class="com.demo.spring.Point">
+        <property name="x" value="0" />
+        <property name="y" value="-20"/>
+    </bean>
+    <bean id="third" class="com.demo.spring.Point">
+        <property name="x" value="20" />
+        <property name="y" value="0"/>
+    </bean>
+    <alias name="triangle" alias="triangle-alias"/>
+</beans>
