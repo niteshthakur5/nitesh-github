@@ -34,4 +34,6 @@
         <property name="y" value="0"/>
     </bean>
     <alias name="triangle" alias="triangle-alias"/>
+    
+    <bean class="com.demo.spring.DisplayBeanNameBeanPostProcessor"/>
 </beans>
