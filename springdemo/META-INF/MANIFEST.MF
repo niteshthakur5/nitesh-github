@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SpringBasic
+Bundle-SymbolicName: SpringBasic
+Bundle-Version: 1.0.0.qualifier
+Export-Package: com.demo.spring,
+ com.demo.spring.db,
+ com.demo.spring.test

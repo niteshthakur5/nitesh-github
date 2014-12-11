@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+        <classPathEntry location="F:/mysqlConnectorjdbc/mysql-connector-5.1.18.jar"/>
+        <context id="springDemo">
+		    <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+		        connectionURL="jdbc:mysql://localhost:3306/ibatistest"
+		        userId="root"
+		        password="iabe">
+		    </jdbcConnection>
+		    
+		    <javaModelGenerator targetPackage="com.demo.spring.domain"
+            targetProject="\src\main\java\com\demo\spring" />
+		    
+		    <sqlMapGenerator targetPackage="com.demo.spring.mybatis.mapper"
+            targetProject="\src\main\java\com\demo\spring" />
+		    
+		    <javaClientGenerator targetPackage="com.demo.spring.mybatis.mapper"
+            targetProject="\src\main\java\com\demo\spring" type="XMLMAPPER" /> 
+            
+            <table schema="ibatistest" tableName="person"  > 
+	            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()"
+	                identity="true" type="post" />
+            </table> 
+       </context>   
+        
+</generatorConfiguration>

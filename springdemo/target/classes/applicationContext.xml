@@ -36,4 +36,48 @@
     <alias name="triangle" alias="triangle-alias"/>
     
     <bean class="com.demo.spring.DisplayBeanNameBeanPostProcessor"/>
-</beans>
+    <bean id="opbean" class="com.demo.spring.Operation"/>
+    <bean id="trackopbean" class="com.demo.spring.TrackOperation" />
+    <bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator" />
+    
+   <!--   <bean id="datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />        
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/ibatistest" />
+        <property name="user" value="root" />
+        <property name="password" value="iabe" />
+    </bean>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="datasource" />
+        <property name="typeAliasesPackage" value="com.demo.spring.domain" />
+        <property name="mapperLocations" value="classpath:com/demo/spring/mybatis/mapper/*.xml" />
+    </bean> 
+    <bean id="msc" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.demo.spring.mybatis.mapper" />
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+     -->
+     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/ibatistest"/>
+        <property name="username" value="root"/>
+        <property name="password" value="iabe"/>
+    </bean>
+   
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="typeAliasesPackage" value="com.demo.spring.domain"/>
+        <property name="mapperLocations" value="classpath:com/demo/spring/mybatis/mapper/*.xml" />
+    </bean>
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.demo.spring.mybatis.mapper" />
+    </bean>
+
+   <!--  <tx :annotation-driven transaction-manager="transactionManager"/>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+       <property name="dataSource" ref="dataSource" />
+    </bean> -->
+
+  </beans>
