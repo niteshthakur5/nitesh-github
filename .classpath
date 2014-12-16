@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="project-nitesh/src"/>
+	<classpathentry kind="src" path="springdemo/src/main/java"/>
+	<classpathentry kind="lib" path="project-nitesh/WebContent/WEB-INF/lib/json-rpc-1.0.jar"/>
+	<classpathentry kind="lib" path="project-nitesh/WebContent/WEB-INF/lib/mysql-connector-5.1.18.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="springdemo/target/classes"/>
+</classpath>
