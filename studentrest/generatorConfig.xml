@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <classPathEntry
+        location="F:/workspace/Bitcovery/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/studentrest/WEB-INF/lib/mysql-connector-java-5.1.6.jar" />
+
+    <context id="contextStudentRest">
+    <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+            connectionURL="jdbc:mysql://localhost:3306/studentrest" userId="root"
+            password="iabe" />
+        <javaModelGenerator targetPackage="com.student.rest.domain"
+            targetProject="studentrest" />
+        <sqlMapGenerator targetPackage="com.student.rest.mybatis.mapper"
+            targetProject="studentrest" />
+        <javaClientGenerator targetPackage="com.student.rest.mybatis.mapper"
+            targetProject="studentrest" type="XMLMAPPER" /> 
+                <table schema="studentrest" tableName="student"  > 
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()"
+                identity="true" type="post" />
+           
+        </table>    
+         
+        
+    </context>
+
+</generatorConfiguration>
